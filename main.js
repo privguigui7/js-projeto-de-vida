@@ -1,58 +1,50 @@
+const datasFinais = {
+    dias120: new Date("2025-12-31T23:59:59"),
+    dias90: new Date("2025-10-01T23:59:59"),
+    dias60: new Date("2025-08-01T23:59:59"),
+    dias30: new Date("2025-06-10T23:59:59")
+};
+
+// Atualiza o contador
+function atualizarContador(idPrefixo, dataFinal) {
+    const agora = new Date();
+    const diferenca = dataFinal - agora;
+
+    if (diferenca <= 0) {
+        document.getElementById(idPrefixo).textContent = "0";
+        document.getElementById("horas" + idPrefixo.slice(4)).textContent = "0";
+        document.getElementById("min" + idPrefixo.slice(4)).textContent = "0";
+        document.getElementById("seg" + idPrefixo.slice(4)).textContent = "0";
+        return;
+    }
+
+    const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diferenca / (1000 * 60 * 60)) % 24);
+    const minutos = Math.floor((diferenca / (1000 * 60)) % 60);
+    const segundos = Math.floor((diferenca / 1000) % 60);
+
+    document.getElementById(idPrefixo).textContent = dias;
+    document.getElementById("horas" + idPrefixo.slice(4)).textContent = horas;
+    document.getElementById("min" + idPrefixo.slice(4)).textContent = minutos;
+    document.getElementById("seg" + idPrefixo.slice(4)).textContent = segundos;
+}
+
+// Roda os contadores a cada segundo
+setInterval(() => {
+    for (const id in datasFinais) {
+        atualizarContador(id, datasFinais[id]);
+    }
+}, 1000);
+
+// Troca de abas ao clicar nos botões
 const botoes = document.querySelectorAll(".botao");
-const textos = document.querySelectorAll(".aba-conteudo");
+const conteudos = document.querySelectorAll(".aba-conteudo");
 
-for (let i = 0; i < botoes.length; i++) {
-    botoes[i].onclick = function () {
+botoes.forEach(botao, index) ; 
+    botao.addEventListener("click", () => {
+        document.querySelector(".botao.ativo").classList.remove("ativo");
+        document.querySelector(".aba-conteudo.ativo").classList.remove("ativo");
 
-        for (let j = 0; j < botoes.length; j++) {
-            botoes[j].classList.remove("ativo");
-            textos[j].classList.remove("ativo");
-        }
-
-        botoes[i].classList.add("ativo");
-        textos[i].classList.add("ativo");
-    }
-}
-
-const contadores = document.querySelectorAll(".contador");
-const tempoObjetivo1 = new Date("2023-10-05T00:00:00");
-const tempoObjetivo2 = new Date("2023-12-05T00:00:00");
-const tempoObjetivo3 = new Date("2023-12-30T00:00:00");
-const tempoObjetivo4 = new Date("2024-02-01T00:00:00");
-
-const tempos = [tempoObjetivo1, tempoObjetivo2, tempoObjetivo3, tempoObjetivo4];
-
-
-function calculaTempo(tempoObjetivo) {
-    let tempoAtual = new Date();
-    let tempoFinal = tempoObjetivo - tempoAtual;
-    let segundos = Math.floor(tempoFinal / 1000);
-    let minutos = Math.floor(segundos / 60);
-    let horas = Math.floor(minutos / 60);
-    let dias = Math.floor(horas / 24);
-
-    segundos %= 60;
-    minutos %= 60;
-    horas %= 24;
-    if (tempoFinal > 0) {
-        return [dias, horas, minutos, segundos];
-    } else {
-        return [0, 0, 0, 0];
-    }
-}
-
-function atualizaCronometro() {
-    for (let i = 0; i < contadores.length; i++) {
-        document.getElementById("dias" + i).textContent = calculaTempo(tempos[i])[0];
-        document.getElementById("horas" + i).textContent = calculaTempo(tempos[i])[1];
-        document.getElementById("min" + i).textContent = calculaTempo(tempos[i])[2];
-        document.getElementById("seg" + i).textContent = calculaTempo(tempos[i])[3];
-    }
-}
-
-function comecaCronometro() {
-    atualizaCronometro();
-    setInterval(atualizaCronometro, 1000);
-}
-
-comecaCronometro();
+        botao.classList.add("ativo");
+        conteudos[index].classList.add("ativo");
+    });
